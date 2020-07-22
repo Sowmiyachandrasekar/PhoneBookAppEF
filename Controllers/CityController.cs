@@ -19,6 +19,7 @@ namespace PhoneBookApp.Controllers
         public ActionResult Index()
         {
             var cities = db.Cities.Include(c => c.State);
+            cities = cities.Where(c => c.IsActive.Equals(true));
             return View(cities.ToList());
         }
 

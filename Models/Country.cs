@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhoneBookApp.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Web;
 
 namespace PhoneBookApp.Models
 {
-    public class Country
+    public class Country : ISoftDeletable
     {
         
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

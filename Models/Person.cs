@@ -5,10 +5,11 @@ using System.Web;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using PhoneBookApp.Interfaces;
 
 namespace PhoneBookApp.Models
 {
-    public class Person
+    public class Person : ISoftDeletable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

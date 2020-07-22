@@ -27,6 +27,7 @@ namespace PhoneBookApp.Controllers
                 return View(person.ToList());
             }
             var persons = db.Persons.Include(p => p.City).Include(p => p.Country).Include(p => p.State);
+            persons = persons.Where(p => p.IsActive.Equals(true));
             return View(persons.ToList());
         }
 
@@ -48,11 +49,63 @@ namespace PhoneBookApp.Controllers
         // GET: Person/Create
         public ActionResult Create()
         {
-            ViewBag.CityId = new SelectList(db.Cities, "CityId", "CityName");
-            ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName");
-            ViewBag.StateId = new SelectList(db.States, "StateId", "StateName");
+            var country = db.Countries.Where(p => p.IsActive).ToList();
+            List<SelectListItem> cl = new List<SelectListItem>();
+            cl.Add(new SelectListItem { 
+                Text = "---Select Country---",
+                Value = "0"
+            });
+
+            foreach(var c in country)
+            {
+                cl.Add(new SelectListItem
+                { 
+                    Text = c.CountryName,
+                    Value = c.CountryId.ToString()
+                });
+                ViewBag.country = cl;
+            }
+
+            //ViewBag.CityId = new SelectList(db.Cities, "CityId", "CityName");
+            //ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName");
+            //ViewBag.StateId = new SelectList(db.States, "StateId", "StateName");
             return View();
         }
+
+        public JsonResult GetStates(int id)
+        {
+            var states = db.States.Where(s => s.CountryId == id && s.IsActive).ToList();
+            List<SelectListItem> sl = new List<SelectListItem>();
+
+            sl.Add(new SelectListItem { Text = "---Select State---", Value = "0"});
+            if(states != null)
+            {
+                foreach(var s in states)
+                {
+                    sl.Add(new SelectListItem { Text = s.StateName, Value = s.StateId.ToString() });
+                }
+            }
+
+            return Json(new SelectList(sl, "Value", "Text", JsonRequestBehavior.AllowGet));
+        }
+
+        public JsonResult GetCities(int id)
+        {
+            var cities = db.Cities.Where(s => s.StateId == id && s.IsActive).ToList();
+            List<SelectListItem> cll = new List<SelectListItem>();
+
+            cll.Add(new SelectListItem { Text = "---Select City---", Value = "0" });
+            if (cities != null)
+            {
+                foreach (var c in cities)
+                {
+                    cll.Add(new SelectListItem { Text = c.CityName, Value = c.CityId.ToString() });
+                }
+            }
+
+            return Json(new SelectList(cll, "Value", "Text", JsonRequestBehavior.AllowGet));
+        }
+
 
         // POST: Person/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -68,9 +121,9 @@ namespace PhoneBookApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CityId = new SelectList(db.Cities, "CityId", "CityName", person.CityId);
-            ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName", person.CountryId);
-            ViewBag.StateId = new SelectList(db.States, "StateId", "StateName", person.StateId);
+            //ViewBag.CityId = new SelectList(db.Cities, "CityId", "CityName", person.CityId);
+            //ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName", person.CountryId);
+            //ViewBag.StateId = new SelectList(db.States, "StateId", "StateName", person.StateId);
             return View(person);
         }
 

@@ -5,7 +5,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using PhoneBookApp.Models;
 using System.Linq;
 using System.Web;
-
+using PhoneBookApp.Interfaces;
 
 namespace PhoneBookApp.DAL
 {
@@ -61,8 +61,13 @@ namespace PhoneBookApp.DAL
             {
                 foreach (var entry in Changed.Where(e => e.State == EntityState.Deleted))
                 {
-                    entry.State = EntityState.Modified;
-                    entry.CurrentValues["IsActive"] = false;
+                    entry.State = EntityState.Unchanged;
+                    ((ISoftDeletable)entry.Entity).IsActive = false;
+                    //if (entry.Entity is ISoftDeletable)
+                    //{
+                    //    // Set IsDeleted....
+                    //    //((ISoftDeletable)entry.Entity).IsActive = true;
+                    //}
                 }
             }
             return base.SaveChanges();
