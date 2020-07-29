@@ -41,7 +41,7 @@ namespace PhoneBookApp.Controllers
             Person person = db.Persons.Find(id);
             if (person == null)
             {
-                return HttpNotFound();
+                return View("Error");
             }
             return View(person);
         }
@@ -65,10 +65,6 @@ namespace PhoneBookApp.Controllers
                 });
                 ViewBag.country = cl;
             }
-
-            //ViewBag.CityId = new SelectList(db.Cities, "CityId", "CityName");
-            //ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName");
-            //ViewBag.StateId = new SelectList(db.States, "StateId", "StateName");
             return View();
         }
 
@@ -77,7 +73,6 @@ namespace PhoneBookApp.Controllers
             var states = db.States.Where(s => s.CountryId == id && s.IsActive).ToList();
             List<SelectListItem> sl = new List<SelectListItem>();
 
-            sl.Add(new SelectListItem { Text = "---Select State---", Value = "0"});
             if(states != null)
             {
                 foreach(var s in states)
@@ -130,6 +125,23 @@ namespace PhoneBookApp.Controllers
         // GET: Person/Edit/5
         public ActionResult Edit(int? id)
         {
+            var country = db.Countries.Where(p => p.IsActive).ToList();
+            List<SelectListItem> cl = new List<SelectListItem>();
+            cl.Add(new SelectListItem
+            {
+                Text = "---Select Country---",
+                Value = "0"
+            });
+
+            foreach (var c in country)
+            {
+                cl.Add(new SelectListItem
+                {
+                    Text = c.CountryName,
+                    Value = c.CountryId.ToString()
+                });
+                ViewBag.country = cl;
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -139,9 +151,7 @@ namespace PhoneBookApp.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CityId = new SelectList(db.Cities, "CityId", "CityName", person.CityId);
-            ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName", person.CountryId);
-            ViewBag.StateId = new SelectList(db.States, "StateId", "StateName", person.StateId);
+
             return View(person);
         }
 
