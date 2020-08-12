@@ -28,12 +28,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             City city = db.Cities.Find(id);
             if (city == null)
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             return View(city);
         }
@@ -41,8 +43,17 @@ namespace PhoneBookApp.Controllers
         // GET: City/Create
         public ActionResult Create()
         {
-            ViewBag.StateId = new SelectList(db.States, "StateId", "StateName");
-            return View();
+            var state = db.States.Where(s => s.IsActive).ToList();
+            ViewBag.StateId = new SelectList(state, "StateId", "StateName");
+            if (ViewBag.StateId != null)
+            {
+                return View();
+            }
+            else
+            {
+                ViewBag.Error = "Atleat one country is needed in State table ";
+                return View("Error");
+            }
         }
 
         // POST: City/Create
@@ -68,12 +79,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             City city = db.Cities.Find(id);
             if (city == null)
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             ViewBag.StateId = new SelectList(db.States, "StateId", "StateName", city.StateId);
             return View(city);
@@ -101,12 +114,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request .Please try again!";
+                return View("Error");
             }
-            City city = db.Cities.Find(id);
+                City city = db.Cities.Find(id);
             if (city == null)
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             return View(city);
         }
@@ -116,10 +131,19 @@ namespace PhoneBookApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            City city = db.Cities.Find(id);
-            db.Cities.Remove(city);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            List<Person> person = db.Persons.Where(p => p.CityId == id).ToList();
+            if (person.Count > 0)
+            {
+                ViewBag.Error = "Cannot delete this City because this country is used in people";
+                return View("Error");
+            }
+            else
+            {
+                City city = db.Cities.Find(id);
+                db.Cities.Remove(city);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
         }
 
         protected override void Dispose(bool disposing)

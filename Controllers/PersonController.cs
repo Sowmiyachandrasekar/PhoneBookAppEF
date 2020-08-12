@@ -20,8 +20,12 @@ namespace PhoneBookApp.Controllers
         {
             if (!String.IsNullOrEmpty(SearchString)) 
             {
-                var person=db.Persons.Where(p =>   (p.FirstName.Contains(SearchString) ||
+                var person=db.Persons.Where(p => (p.FirstName.Contains(SearchString) ||
                                                    p.LastName.Contains(SearchString) ||
+                                                   p.Country.CountryName.Contains(SearchString) ||
+                                                   p.State.StateName.Contains(SearchString) ||
+                                                   p.City.CityName.Contains(SearchString) ||
+                                                   p.EmailAddress.Contains(SearchString) ||
                                                    p.PhoneNumber.Contains(SearchString)) &&
                                                    p.IsActive);
                 return View(person.ToList());
@@ -36,11 +40,13 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             Person person = db.Persons.Find(id);
             if (person == null)
             {
+                ViewBag.Error = "Your data Not Found";
                 return View("Error");
             }
             return View(person);
@@ -49,58 +55,28 @@ namespace PhoneBookApp.Controllers
         // GET: Person/Create
         public ActionResult Create()
         {
-            var country = db.Countries.Where(p => p.IsActive).ToList();
-            List<SelectListItem> cl = new List<SelectListItem>();
-            cl.Add(new SelectListItem { 
-                Text = "---Select Country---",
-                Value = "0"
-            });
-
-            foreach(var c in country)
+            List<Country> coun = db.Countries.ToList();
+            if (coun != null)
             {
-                cl.Add(new SelectListItem
-                { 
-                    Text = c.CountryName,
-                    Value = c.CountryId.ToString()
-                });
-                ViewBag.country = cl;
-            }
-            return View();
-        }
-
-        public JsonResult GetStates(int id)
-        {
-            var states = db.States.Where(s => s.CountryId == id && s.IsActive).ToList();
-            List<SelectListItem> sl = new List<SelectListItem>();
-
-            if(states != null)
-            {
-                foreach(var s in states)
+                List<Country> country = db.Countries.Where(c => c.IsActive).ToList();
+                List<SelectListItem> co = new List<SelectListItem>();
+                foreach (var c in country)
                 {
-                    sl.Add(new SelectListItem { Text = s.StateName, Value = s.StateId.ToString() });
+                    co.Add(new SelectListItem
+                    {
+                        Text = c.CountryName,
+                        Value = c.CountryId.ToString()
+                    });
+                    ViewBag.country = co;
                 }
+                return View();
             }
-
-            return Json(new SelectList(sl, "Value", "Text", JsonRequestBehavior.AllowGet));
-        }
-
-        public JsonResult GetCities(int id)
-        {
-            var cities = db.Cities.Where(s => s.StateId == id && s.IsActive).ToList();
-            List<SelectListItem> cll = new List<SelectListItem>();
-
-            cll.Add(new SelectListItem { Text = "---Select City---", Value = "0" });
-            if (cities != null)
+            else
             {
-                foreach (var c in cities)
-                {
-                    cll.Add(new SelectListItem { Text = c.CityName, Value = c.CityId.ToString() });
-                }
+                ViewBag.Error = "Atleast one country is requried ";
+                return View("Error");
             }
-
-            return Json(new SelectList(cll, "Value", "Text", JsonRequestBehavior.AllowGet));
         }
-
 
         // POST: Person/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -115,33 +91,44 @@ namespace PhoneBookApp.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            //ViewBag.CityId = new SelectList(db.Cities, "CityId", "CityName", person.CityId);
-            //ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName", person.CountryId);
-            //ViewBag.StateId = new SelectList(db.States, "StateId", "StateName", person.StateId);
             return View(person);
         }
+        public JsonResult GetStates(int id)
+        {
+            var states = db.States.Where(s => s.CountryId == id && s.IsActive).ToList();
+            List<SelectListItem> listates = new List<SelectListItem>();
+            listates.Add(new SelectListItem { Text = "--Select State--", Value = "0" });
+            if (states != null)
+            {
+                foreach (var s in states)
+                {
+                    listates.Add(new SelectListItem { Text = s.StateName, Value = s.StateId.ToString() });
+                }
+            }
+            return Json(new SelectList(listates, "Value", "Text", JsonRequestBehavior.AllowGet));
+        }
+        public JsonResult GetCities(int id)
+        {
+            var cities = db.Cities.Where(c => c.StateId == id && c.IsActive).ToList();
+            List<SelectListItem> licity = new List<SelectListItem>();
+            licity.Add(new SelectListItem { Text = "--Select City--", Value = "0" });
+            if (cities != null)
+            {
+                foreach (var c in cities)
+                {
+                    licity.Add(new SelectListItem { Text = c.CityName, Value = c.CityId.ToString() });
+                }
+
+            }
+
+            return Json(new SelectList(licity, "Value", "Text", JsonRequestBehavior.AllowGet));
+        }
+
+
 
         // GET: Person/Edit/5
         public ActionResult Edit(int? id)
         {
-            var country = db.Countries.Where(p => p.IsActive).ToList();
-            List<SelectListItem> cl = new List<SelectListItem>();
-            cl.Add(new SelectListItem
-            {
-                Text = "---Select Country---",
-                Value = "0"
-            });
-
-            foreach (var c in country)
-            {
-                cl.Add(new SelectListItem
-                {
-                    Text = c.CountryName,
-                    Value = c.CountryId.ToString()
-                });
-                ViewBag.country = cl;
-            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -149,9 +136,12 @@ namespace PhoneBookApp.Controllers
             Person person = db.Persons.Find(id);
             if (person == null)
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
-
+            ViewBag.CityId = new SelectList(db.Cities, "CityId", "CityName", person.CityId);
+            ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName", person.CountryId);
+            ViewBag.StateId = new SelectList(db.States, "StateId", "StateName", person.StateId);
             return View(person);
         }
 
@@ -179,12 +169,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             Person person = db.Persons.Find(id);
             if (person == null)
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             return View(person);
         }

@@ -139,6 +139,7 @@
     <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StateController.cs" />
     <Compile Include="DAL\PersonContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -214,6 +215,8 @@
     <Content Include="Views\Country\Details.cshtml" />
     <Content Include="Views\Country\Edit.cshtml" />
     <Content Include="Views\Country\Index.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Search\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

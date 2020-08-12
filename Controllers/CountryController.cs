@@ -16,27 +16,26 @@ namespace PhoneBookApp.Controllers
     public class CountryController : Controller
     {
         private PersonContext db = new PersonContext();
-        //static readonly HttpClient client = new HttpClient();
         // GET: Country
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            IEnumerable<Country> countries = null;
-            using (var client = new HttpClient())
-            {
-                try
-                {
-                    HttpResponseMessage response = await client.GetAsync("https://localhost:44330/api/Country");
-                    var readTask = await response.Content.ReadAsAsync<IList<Country>>();
-                    countries = readTask;
-                }
-                catch (Exception e)
-                {
-                    ViewBag.Error = e.Message;
-                    return View("Error");
-                }
+            //IEnumerable<Country> countries = null;
+            //using (var client = new HttpClient())
+            //{
+            //    try
+            //    {
+            //        HttpResponseMessage response = await client.GetAsync("https://localhost:44330/api/Country");
+            //        var readTask = await response.Content.ReadAsAsync<IList<Country>>();
+            //        countries = readTask;
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        ViewBag.Error = e.Message;
+            //        return View("Error");
+            //    }
 
-            }
-            return View(countries);
+            //}
+            return View();
         }
 
         // GET: Country/Details/5
@@ -47,9 +46,10 @@ namespace PhoneBookApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Country country = db.Countries.Find(id);
-            if (country == null)
+            if (country == null || country.IsActive.Equals(false))
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             return View(country);
         }
@@ -82,12 +82,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             Country country = db.Countries.Find(id);
-            if (country == null)
+            if (country == null || country.IsActive.Equals(false))
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             return View(country);
         }
@@ -113,12 +115,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             Country country = db.Countries.Find(id);
-            if (country == null)
+            if (country == null || country.IsActive.Equals(false))
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             return View(country);
         }
@@ -128,10 +132,19 @@ namespace PhoneBookApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Country country = db.Countries.Find(id);
-            db.Countries.Remove(country);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            List<Person> person = db.Persons.Where(p => p.CountryId == id).ToList();
+            if (person.Count > 0)
+            {
+                ViewBag.Error = "Cannot delete this country because this country is used in person";
+                return View("Error");
+            }
+            else
+            {
+                Country country = db.Countries.Find(id);
+                db.Countries.Remove(country);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -28,12 +28,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             State state = db.States.Find(id);
             if (state == null)
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             return View(state);
         }
@@ -41,8 +43,18 @@ namespace PhoneBookApp.Controllers
         // GET: State/Create
         public ActionResult Create()
         {
+            var country = db.Countries.Where(c => c.IsActive).ToList();
             ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName");
-            return View();
+            if (ViewBag.CountryId != null)
+            {
+
+                return View();
+            }
+            else
+            {
+                ViewBag.Error = "Atleat one country is needed in country table ";
+                return View("Error");
+            }
         }
 
         // POST: State/Create
@@ -68,12 +80,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             State state = db.States.Find(id);
             if (state == null)
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             ViewBag.CountryId = new SelectList(db.Countries, "CountryId", "CountryName", state.CountryId);
             return View(state);
@@ -101,12 +115,14 @@ namespace PhoneBookApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.Error = "Error processing your request.Please try again!";
+                return View("Error");
             }
             State state = db.States.Find(id);
             if (state == null)
             {
-                return HttpNotFound();
+                ViewBag.Error = "Your data Not Found";
+                return View("Error");
             }
             return View(state);
         }
@@ -116,10 +132,19 @@ namespace PhoneBookApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            State state = db.States.Find(id);
-            db.States.Remove(state);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            List<Person> person = db.Persons.Where(p => p.StateId == id).ToList();
+            if (person.Count > 0)
+            {
+                ViewBag.Error = "Cannot delete this country because this country is used in person";
+                return View("Error");
+            }
+            else
+            {
+                State state = db.States.Find(id);
+                db.States.Remove(state);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
         }
 
         protected override void Dispose(bool disposing)

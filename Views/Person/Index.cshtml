@@ -1,22 +1,139 @@
 ﻿@model IEnumerable<PhoneBookApp.Models.Person>
 
-@{
-    ViewBag.Title = "Index";
-}
+@{ ViewBag.Title = "Index"; }
 
 <h2>Index</h2>
-
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@using (Html.BeginForm())
-{
+@using (Html.BeginForm()) 
+ {
     <p>
-        Search: @Html.TextBox("SearchString")
-        <input type="submit" value="Search" />
+        @Html.TextBox("SearchString")
+        <input type="button" value="Search" id="SearchBtn" />
     </p>
-}
-<table class="table">
+ }
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        People Using WebApi
+    </div>
+    <div class="panel-body">
+        <table class="table table-bordered" id="Table">
+            <thead>
+                <tr>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>PhoneNumber</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="tablebody"></tbody>
+        </table>
+    </div>
+</div>
+@*<div class="panel panel-primary">
+    <div class="panel-heading">
+        People Search
+    </div>
+    <div class="panel-body">
+        <table class="table table-bordered" id="Tableone">
+            <thead>
+                <tr>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>PhoneNumber</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>*@
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+            $.ajax({
+                cache: false,
+                type: "GET",
+                headers:
+                {
+                    Authorization: 'Basic ' + btoa("Admin" + ':' + "admin")
+                },
+                url: "https://localhost:44330/odata/OdataPeople",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#DIV").html('');
+                    var DIV = '';
+                    $("#tablebody").empty();
+                    $.each(data.value, function (i, item) {
+                        var rows = "<tr>" +
+                            "<td id='FirstName'>" + item.FirstName + "</td>" +
+                            "<td id='LastName'>" + item.LastName + "</td>" +
+                            "<td id='PhoneNumber'>" + item.PhoneNumber + "</td>" +
+                            "<td id='Email'>" + item.EmailAddress + "</td>" +
+                            "</tr>";
+                        $("#tablebody").append(rows);
+                    });
+                    console.log(data);
+                },
+                failure: function (data) {
+                    alert(data.responseText);
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#SearchBtn").click(function () {
+            var searchValue = $("#SearchString").val();
+            $.ajax({
+                cache: false,
+                type: "GET",
+                headers:
+                {
+                    Authorization: 'Basic ' + btoa("Admin" + ':' + "admin")
+                },
+                url: "https://localhost:44330/odata/OdataPeople?$filter=substringof('" + searchValue + "',FirstName)",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#DIV").html('');
+                    var DIV = '';
+                    $("#tablebody").empty();
+                    $.each(data.value, function (i, item) {
+                        var rows = "<tr>" +
+                            "<td id='FirstName'>" + item.FirstName + "</td>" +
+                            "<td id='LastName'>" + item.LastName + "</td>" +
+                            "<td id='PhoneNumber'>" + item.PhoneNumber + "</td>" +
+                            "<td id='Email'>" + item.EmailAddress + "</td>" +
+                            "</tr>";
+                        $("#tablebody").append(rows);
+                    });
+                    console.log(data);
+                },
+                failure: function (data) {
+                    alert(data.responseText);
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+@*<table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.FirstName)
@@ -83,27 +200,6 @@
                 @Html.ActionLink("Delete", "Delete", new { id = item.ID })
             </td>
         </tr>
-    }
+   
+</table>*@
 
-</table>
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
-<form id="myForm">
-    <label for="CountriesDropdown"><b>CountriesList</b></label>
-    <select class="form-control" id="CountriesDropDown" name="CountriesDropDown"></select>
-</form>
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            type: "GET",
-            url: "https://localhost:44330/api/Country",
-            data: "{}",
-            success: function (data) {
-                var s = '<option value="-1">Please Select a Country</option>';
-                for (var i = 0; i < data.length; i++) {
-                    s += '<option value="' + data[i].CountryId + '">' + data[i].CountryName + '</option>';
-                }
-                $("#CountriesDropDown").html(s);
-            }
-        });
-    });
-</script>
