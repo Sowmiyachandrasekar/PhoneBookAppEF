@@ -13,7 +13,7 @@
 {
     <p>
         Search: @Html.TextBox("SearchString")
-        <input type="submit" value="Search" /> 
+        <input type="submit" value="Search" />
     </p>
 }
 <table class="table">
@@ -44,9 +44,6 @@
         <th>
             @Html.DisplayNameFor(model => model.Pincode)
         </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.IsActive)
-        </th>*@
         <th></th>
     </tr>
 
@@ -70,7 +67,7 @@
                 @Html.DisplayFor(modelItem => item.State.StateName),
                 @Html.DisplayFor(modelItem => item.Country.CountryName)
             </td>
-            
+
             <td>
                 @Html.DisplayFor(modelItem => item.AddressOne)
             </td>
@@ -80,9 +77,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Pincode)
             </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.IsActive)
-                </td>*@
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
                 @Html.ActionLink("Details", "Details", new { id = item.ID }) |
@@ -92,3 +86,24 @@
     }
 
 </table>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+<form id="myForm">
+    <label for="CountriesDropdown"><b>CountriesList</b></label>
+    <select class="form-control" id="CountriesDropDown" name="CountriesDropDown"></select>
+</form>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "https://localhost:44330/api/Country",
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Please Select a Country</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].CountryId + '">' + data[i].CountryName + '</option>';
+                }
+                $("#CountriesDropDown").html(s);
+            }
+        });
+    });
+</script>
