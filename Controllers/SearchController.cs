@@ -6,10 +6,9 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using System.Web.Mvc;
-using PhoneBookApp.Models;
 using System.Data;
 using System.Collections;
-using PhoneBookApp.DAL;
+using PhoneBook.DAL;
 
 namespace PhoneBookApp.Controllers
 {

@@ -6,8 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using PhoneBookApp.DAL;
-using PhoneBookApp.Models;
+using PhoneBook.DAL;
 
 namespace PhoneBookApp.Controllers
 {
@@ -117,7 +116,7 @@ namespace PhoneBookApp.Controllers
                 ViewBag.Error = "Error processing your request .Please try again!";
                 return View("Error");
             }
-                City city = db.Cities.Find(id);
+            City city = db.Cities.Find(id);
             if (city == null)
             {
                 ViewBag.Error = "Your data Not Found";

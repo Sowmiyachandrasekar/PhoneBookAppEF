@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using PhoneBookApp.DAL;
+using PhoneBook.DAL;
 using System.Data.Entity;
 namespace PhoneBookApp
 {

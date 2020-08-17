@@ -4,12 +4,9 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using PhoneBookApp.DAL;
-using PhoneBookApp.Models;
+using PhoneBook.DAL;
 
 namespace PhoneBookApp.Controllers
 {
@@ -33,7 +30,6 @@ namespace PhoneBookApp.Controllers
             //        ViewBag.Error = e.Message;
             //        return View("Error");
             //    }
-
             //}
             return View();
         }

@@ -6,8 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using PhoneBookApp.DAL;
-using PhoneBookApp.Models;
+using PhoneBook.DAL;
 
 namespace PhoneBookApp.Controllers
 {
@@ -18,16 +17,16 @@ namespace PhoneBookApp.Controllers
         // GET: Person
         public ActionResult Index(string SearchString)
         {
-            if (!String.IsNullOrEmpty(SearchString)) 
+            if (!String.IsNullOrEmpty(SearchString))
             {
-                var person=db.Persons.Where(p => (p.FirstName.Contains(SearchString) ||
-                                                   p.LastName.Contains(SearchString) ||
-                                                   p.Country.CountryName.Contains(SearchString) ||
-                                                   p.State.StateName.Contains(SearchString) ||
-                                                   p.City.CityName.Contains(SearchString) ||
-                                                   p.EmailAddress.Contains(SearchString) ||
-                                                   p.PhoneNumber.Contains(SearchString)) &&
-                                                   p.IsActive);
+                var person = db.Persons.Where(p => (p.FirstName.Contains(SearchString) ||
+                                                     p.LastName.Contains(SearchString) ||
+                                                     p.Country.CountryName.Contains(SearchString) ||
+                                                     p.State.StateName.Contains(SearchString) ||
+                                                     p.City.CityName.Contains(SearchString) ||
+                                                     p.EmailAddress.Contains(SearchString) ||
+                                                     p.PhoneNumber.Contains(SearchString)) &&
+                                                     p.IsActive);
                 return View(person.ToList());
             }
             var persons = db.Persons.Include(p => p.City).Include(p => p.Country).Include(p => p.State);

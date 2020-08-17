@@ -141,24 +141,9 @@
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StateController.cs" />
-    <Compile Include="DAL\PersonContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\ISoftDeletable.cs" />
-    <Compile Include="Migrations\202007211224301_InitialCreate.cs" />
-    <Compile Include="Migrations\202007211224301_InitialCreate.designer.cs">
-      <DependentUpon>202007211224301_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007211313031_Email-Migration.cs" />
-    <Compile Include="Migrations\202007211313031_Email-Migration.designer.cs">
-      <DependentUpon>202007211313031_Email-Migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\City.cs" />
-    <Compile Include="Models\Person.cs" />
-    <Compile Include="Models\Country.cs" />
-    <Compile Include="Models\State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -195,27 +180,27 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Countries\Create.cshtml" />
+    <Content Include="Views\Countries\Delete.cshtml" />
+    <Content Include="Views\Countries\Details.cshtml" />
+    <Content Include="Views\Countries\Edit.cshtml" />
+    <Content Include="Views\Countries\Index.cshtml" />
+    <Content Include="Views\Cities\Create.cshtml" />
+    <Content Include="Views\Cities\Delete.cshtml" />
+    <Content Include="Views\Cities\Details.cshtml" />
+    <Content Include="Views\Cities\Edit.cshtml" />
+    <Content Include="Views\Cities\Index.cshtml" />
+    <Content Include="Views\States\Create.cshtml" />
+    <Content Include="Views\States\Delete.cshtml" />
+    <Content Include="Views\States\Details.cshtml" />
+    <Content Include="Views\States\Edit.cshtml" />
+    <Content Include="Views\States\Index.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Person\Create.cshtml" />
     <Content Include="Views\Person\Delete.cshtml" />
     <Content Include="Views\Person\Details.cshtml" />
     <Content Include="Views\Person\Edit.cshtml" />
     <Content Include="Views\Person\Index.cshtml" />
-    <Content Include="Views\City\Create.cshtml" />
-    <Content Include="Views\City\Delete.cshtml" />
-    <Content Include="Views\City\Details.cshtml" />
-    <Content Include="Views\City\Edit.cshtml" />
-    <Content Include="Views\City\Index.cshtml" />
-    <Content Include="Views\State\Create.cshtml" />
-    <Content Include="Views\State\Delete.cshtml" />
-    <Content Include="Views\State\Details.cshtml" />
-    <Content Include="Views\State\Edit.cshtml" />
-    <Content Include="Views\State\Index.cshtml" />
-    <Content Include="Views\Country\Create.cshtml" />
-    <Content Include="Views\Country\Delete.cshtml" />
-    <Content Include="Views\Country\Details.cshtml" />
-    <Content Include="Views\Country\Edit.cshtml" />
-    <Content Include="Views\Country\Index.cshtml" />
-    <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -235,16 +220,16 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202007211224301_InitialCreate.resx">
-      <DependentUpon>202007211224301_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007211313031_Email-Migration.resx">
-      <DependentUpon>202007211313031_Email-Migration.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PhoneBookWeb\PhoneBookWeb.csproj">
-      <Project>{b6f928f0-bad7-49a7-a0d3-6f2d8216137d}</Project>
+    <ProjectReference Include="PhoneBook.DAL\PhoneBook.DAL.csproj">
+      <Project>{fab14317-e36f-4a7f-b55c-c878136684f0}</Project>
+      <Name>PhoneBook.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="PhoneBook.Service\PhoneBook.Service.csproj">
+      <Project>{14b52e44-f248-4bc2-9257-ff00dcab402a}</Project>
+      <Name>PhoneBook.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="PhoneBookWeb\PhoneBookWeb.csproj">
+      <Project>{2e42106e-5278-48a0-876b-237313ea7d08}</Project>
       <Name>PhoneBookWeb</Name>
     </ProjectReference>
   </ItemGroup>

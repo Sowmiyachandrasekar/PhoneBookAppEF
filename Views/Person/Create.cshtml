@@ -1,4 +1,5 @@
-﻿@model PhoneBookApp.Models.Person
+﻿@model PhoneBook.DAL.Person
+
 
 @{
     ViewBag.Title = "Create";
@@ -11,7 +12,7 @@
     $(document).ready(function () {
         $.ajax({
             type: "GET",
-            url: "https://localhost:44330/api/Country",
+            url: "https://localhost:44372/api/Country",
             data: "{}",
             headers:
             {
