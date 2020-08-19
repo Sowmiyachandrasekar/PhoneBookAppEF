@@ -1,3 +1,4 @@
+using PhoneBook.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,7 +9,7 @@ using System.Web;
 
 namespace PhoneBook.DAL
 {
-    public class PersonContext : DbContext
+    public class PersonContext : DbContext,IPersonContext
     {
         public PersonContext() : base("PersonContext")
         {

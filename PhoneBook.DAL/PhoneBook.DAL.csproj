@@ -53,6 +53,9 @@
     <Compile Include="City.cs" />
     <Compile Include="Country.cs" />
     <Compile Include="C__MigrationHistory.cs" />
+    <Compile Include="DummyPersonContext.cs" />
+    <Compile Include="Interfaces\IDbContext.cs" />
+    <Compile Include="Interfaces\IPersonContext.cs" />
     <Compile Include="Migrations\202007211224301_InitialCreate.cs" />
     <Compile Include="Migrations\202007211224301_InitialCreate.Designer.cs">
       <DependentUpon>202007211224301_InitialCreate.cs</DependentUpon>

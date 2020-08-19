@@ -7,12 +7,24 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using PhoneBook.DAL;
+using PhoneBook.DAL.Interfaces;
 
 namespace PhoneBookApp.Controllers
 {
     public class CountryController : Controller
     {
-        private PersonContext db = new PersonContext();
+        private IPersonContext db;
+
+        public CountryController()
+        {
+            db = new PersonContext();
+        }
+
+        public CountryController(IPersonContext context)
+        {
+            db = context;
+        }
+
         // GET: Country
         public ActionResult Index()
         {
